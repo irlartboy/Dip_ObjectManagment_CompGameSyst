@@ -41,6 +41,10 @@ public class GameDataWriter
         writer.Write(value.b);
         writer.Write(value.a);
     }
+    public void Write (Random.State value)
+    {
+        writer.Write(JsonUtility.ToJson(value));
+    }
 }
 public class GameDataReader
 {
@@ -87,5 +91,9 @@ public class GameDataReader
         value.b = reader.ReadSingle();
         value.a = reader.ReadSingle();
         return value;
+    }
+    public Random.State ReadRandomState()
+    {
+        return JsonUtility.FromJson<Random.State>(reader.ReadString());
     }
 }

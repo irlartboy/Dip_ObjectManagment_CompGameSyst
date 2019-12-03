@@ -8,6 +8,9 @@ public class Shape : PersistableObject
     Color color;
     MeshRenderer meshRenderer;
 
+    static int colorPropertyId = Shader.PropertyToID("_Color");
+    static MaterialPropertyBlock sharedPropertyBlock;
+
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -16,16 +19,23 @@ public class Shape : PersistableObject
     {
         this.color = color;
         // GetComponent<MeshRenderer>().material.color = color;
-        meshRenderer.material.color = color;
+        // meshRenderer.material.color = color;
+        // var propertyBlock = new MaterialPropertyBlock();
+        if (sharedPropertyBlock == null)
+        {
+            sharedPropertyBlock = new MaterialPropertyBlock();
+        }
+        sharedPropertyBlock.SetColor(colorPropertyId, color);
+        meshRenderer.SetPropertyBlock(sharedPropertyBlock);
     }
     public int ShapeId 
     { 
         get { return shapeId; }
         set
         {
-            if (shapeId == 0)
+            if (shapeId == int.MinValue && value != int.MinValue)
             {
-                ShapeId = value;
+                shapeId = value;
             }
             else
             {
