@@ -6,8 +6,10 @@ public class CompositeSpawnZone : SpawnZone
 {
     [SerializeField]
     SpawnZone[] spawnZones;
+
     [SerializeField]
     bool sequential;
+
     int nextSequentialIndex;
     public override Vector3 SpawnPoint
     {

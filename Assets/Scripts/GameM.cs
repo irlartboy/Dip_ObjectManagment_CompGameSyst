@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameM : PersistableObject
 {
     [SerializeField] ShapeFactory shapeFactory;
 
+    [SerializeField] Slider creationSpeedSlider;
+    [SerializeField] Slider destructionSpeedSlider;
+
     public string savePath;
     public List<Shape> shapes;
     public PersistentStorage storage;
-    const int saveVersion = 3;
+    const int saveVersion = 5;
     float creationProgress;
     float destructionProgress;
     public int levelCount;
@@ -92,6 +96,9 @@ public class GameM : PersistableObject
                 }
             }
         }
+    }
+    private void FixedUpdate()
+    {
         creationProgress += Time.deltaTime * CreationSpeed;
         while (creationProgress >= 1f)
         {
@@ -105,6 +112,8 @@ public class GameM : PersistableObject
             DestroyShape();
         }
     }
+    
+    
     IEnumerator LoadLevel(int levelBuildIndex)
     {
         // SceneManager.LoadScene("Level_1", LoadSceneMode.Additive);
@@ -150,6 +159,10 @@ public class GameM : PersistableObject
         int seed = Random.Range(0, int.MaxValue) ^ (int)Time.unscaledTime;
         mainRandomState = Random.state;
         Random.InitState(seed);
+       // CreationSpeed = 0;
+        creationSpeedSlider.value = CreationSpeed = 0;
+       // DestructionSpeed = 0;
+        destructionSpeedSlider.value = DestructionSpeed = 0;
         for (int i = 0; i < shapes.Count; i++)
         {
             //Destroy(shapes[i].gameObject);
@@ -162,6 +175,10 @@ public class GameM : PersistableObject
         //  writer.Write(-saveVersion);
         writer.Write(shapes.Count);
         writer.Write(Random.state);
+        writer.Write(CreationSpeed);
+        writer.Write(creationProgress);
+        writer.Write(destructionProgress);
+        writer.Write(DestructionSpeed);
         writer.Write(loadedLevelBuildIndex);
         GameLevel.Current.Save(writer);
         for (int i = 0; i < shapes.Count; i++)
@@ -195,6 +212,10 @@ public class GameM : PersistableObject
             {
                 Random.state = state;
             }
+            creationSpeedSlider.value = CreationSpeed = reader.ReadFloat();
+            creationProgress = reader.ReadFloat();
+            destructionSpeedSlider.value = DestructionSpeed = reader.ReadFloat();
+            destructionProgress = reader.ReadFloat();
         }
         // StartCoroutine(LoadLevel(version < 2 ? 1 : reader.ReadInt()));
         yield return LoadLevel(version < 2 ? 1 : reader.ReadInt());

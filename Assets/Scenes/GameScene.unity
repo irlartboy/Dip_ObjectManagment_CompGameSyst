@@ -1159,10 +1159,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shapeFactory: {fileID: 11400000, guid: 14104b5877301064abcab2c6de5735cf, type: 2}
+  creationSpeedSlider: {fileID: 902506606}
+  destructionSpeedSlider: {fileID: 1035760381}
   savePath: 
   shapes: []
   storage: {fileID: 800927443}
   levelCount: 2
+  reseedOnLoad: 0
 --- !u!4 &1399199189
 Transform:
   m_ObjectHideFlags: 0
