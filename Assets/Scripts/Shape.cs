@@ -11,6 +11,9 @@ public class Shape : PersistableObject
     [SerializeField]
     MeshRenderer[] meshRenderers;
 
+    public Vector3 AngularVelocity { get; set; }
+    public Vector3 Velocity { get; set; }
+
     // MeshRenderer meshRenderer;
 
     static int colorPropertyId = Shader.PropertyToID("_Color");
@@ -26,6 +29,11 @@ public class Shape : PersistableObject
     // {
     //     meshRenderer = GetComponent<MeshRenderer>();
     //}
+    public void GameUpdate()
+    {
+        transform.Rotate(AngularVelocity * Time.deltaTime);
+        transform.localPosition += Velocity * Time.deltaTime;
+    }
     public void SetColor(Color color)
     {
         // this.color = color;
